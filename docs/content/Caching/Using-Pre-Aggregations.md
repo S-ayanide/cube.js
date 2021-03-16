@@ -128,6 +128,10 @@ We highly recommend leaving `readOnly` unset or explicitly setting it to
 When using **external** pre-aggregations, Cube.js will
 store pre-aggregations inside its own purpose-built storage layer: Cube Store.
 
+Cube Store is writen in Rust and utilizes a set of technologies like RocksDB, Apache Parquet, and Arrow that have proven effectiveness in solving data access problems.
+
+Cube Store is [fully open-sourced](https://github.com/cube-js/cube.js/tree/master/rust#cube-store) and released under the Apache 2.0 license.
+
 Alternatively, you can store external pre-aggregations in a different database, such MySQL or Postgres.
 In order to make this work, you should set the
 [`externalDriverFactory`][ref-config-extdriverfactory] and
@@ -147,3 +151,18 @@ CUBEJS_EXT_DB_USER=<YOUR_DB_USER_HERE>
 CUBEJS_EXT_DB_PASS=<YOUR_DB_PASS_HERE>
 CUBEJS_EXT_DB_TYPE=<SUPPORTED_DB_TYPE_HERE>
 ```
+
+<!-- prettier-ignore-start -->
+[[warning |]]
+| Please be aware of the limitations when using Postgres/MySQL as an external database for pre-aggregations.
+<!-- prettier-ignore-end -->
+
+ Some of the known limitations are:
+
+* Performance issues with high cardinality rollups (1B and more)
+* Lack of HyperLogLog support, therefore lack of distinct aggregations
+* Degraded performance for big UNION ALL queries
+* Poor JOIN performance across rolled up tables, which leads to poor performance
+  of the cross database joins
+* Table/schema name length issues across different database types
+* SQL type differences between source and external database
