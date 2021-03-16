@@ -159,7 +159,7 @@ CUBEJS_EXT_DB_TYPE=<SUPPORTED_DB_TYPE_HERE>
 
  Some of the known limitations are:
 
-* Performance issues with high cardinality rollups (1B and more)
+* Performance issues with high cardinality rollups (1B or more)
 * Lack of HyperLogLog support, therefore lack of distinct aggregations
 * Degraded performance for big UNION ALL queries
 * Poor JOIN performance across rolled up tables, which leads to poor performance
